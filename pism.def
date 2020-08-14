@@ -1,0 +1,37 @@
+Bootstrap: localimage
+From: /scratch/local/mhagdorn/pism/singularity/petsc.sif
+
+%environment
+    export OMPI_DIR=/opt/ompi
+    export PATH=$OMPI_DIR/bin:$PATH
+    export LD_LIBRARY_PATH=$OMPI_DIR/lib:$LD_LIBRARY_PATH
+    export MANPATH=$OMPI_DIR/share/man:$MANPATH
+
+    export PETSC_ARCH=opt
+    export PETSC_VERSION=3.13.4
+    export PETSC_DIR=/opt/petsc-${PETSC_VERSION}
+
+%post
+    apt install -y cmake libgsl-dev libfftw3-dev libudunits2-dev libproj-dev git libnetcdf-dev netcdf-bin
+
+    export OMPI_DIR=/opt/ompi
+    export PATH=$OMPI_DIR/bin:$PATH
+    export LD_LIBRARY_PATH=$OMPI_DIR/lib:$LD_LIBRARY_PATH
+    export MANPATH=$OMPI_DIR/share/man:$MANPATH
+
+    export PETSC_ARCH=opt
+    export PETSC_VERSION=3.13.4
+    export PETSC_DIR=/opt/petsc-${PETSC_VERSION}
+
+    export PISM_VERSION=v1.2.1
+
+    mkdir -p /opt/pism
+    cd /opt/pism
+    git clone https://github.com/pism/pism.git
+    cd pism
+    git checkout ${PISM_VERSION}
+
+    mkdir build
+    cd build
+    PISM_INSTALL_PREFIX=/opt/pism CC=mpicc CXX=mpicxx cmake ..
+    make install

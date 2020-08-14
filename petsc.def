@@ -1,0 +1,41 @@
+Bootstrap: localimage
+From: /scratch/local/mhagdorn/pism/singularity/openmpi.sif
+
+%environment
+    export PETSC_DIR=/opt/petsc
+    export SINGULARITY_PETSC_DIR=$PETSC_DIR
+    export SINGULARITYENV_APPEND_PATH=$PETSC_DIR/bin
+    export SINGULARITYENV_APPEND_LD_LIBRARY_PATH=$PETSC_DIR/lib
+
+
+%post
+    apt install -y libblas-dev liblapack-dev python
+
+    export OMPI_DIR=/opt/ompi
+    export PATH=$OMPI_DIR/bin:$PATH
+    export LD_LIBRARY_PATH=$OMPI_DIR/lib:$LD_LIBRARY_PATH
+    export MANPATH=$OMPI_DIR/share/man:$MANPATH
+
+    export PATH=$PETSC_DIR/bin:$PATH
+    export LD_LIBRARY_PATH=$PETSC_DIR/lib:$LD_LIBRARY_PATH
+    export MANPATH=$PETSC_DIR/share/man:$MANPATH
+
+    echo "Installing PETSc"
+    export PETSC_ARCH=opt
+    export PETSC_VERSION=3.13.4
+    export PETSC_DIR=/opt/petsc-${PETSC_VERSION}
+    export PETSC_URL=http://ftp.mcs.anl.gov/pub/petsc/release-snapshots/petsc-lite-${PETSC_VERSION}.tar.gz
+
+    mkdir -p /tmp/petsc
+
+    cd /tmp/petsc
+    wget -O petsc-lite-${PETSC_VERSION}.tar.gz ${PETSC_URL}
+    cd /opt
+    tar xzf /tmp/petsc/petsc-lite-${PETSC_VERSION}.tar.gz
+    
+    # Compile and install
+    cd ${PETSC_DIR}
+    CC=mpicc CXX=mpicxx ./config/configure.py --with-shared-libraries \
+                                          --with-debugging=0 \
+                                          --with-fc=0
+    make all
