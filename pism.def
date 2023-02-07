@@ -1,5 +1,5 @@
 Bootstrap: localimage
-From: /scratch/local/mhagdorn/pism/singularity/petsc.sif
+From: petsc.sif
 
 %environment
     export OMPI_DIR=/opt/ompi
@@ -23,7 +23,11 @@ From: /scratch/local/mhagdorn/pism/singularity/petsc.sif
     export PETSC_VERSION=3.13.4
     export PETSC_DIR=/opt/petsc-${PETSC_VERSION}
 
-    export PISM_VERSION=v1.2.1
+    export PISM_VERSION=v2.0.6
+
+    #comment out these two lines if not building on the same arch as the HPC you're targeting
+    export CFLAGS="-march=native"
+    export CXXFLAGS="-march=native"
 
     mkdir -p /opt/pism
     cd /opt/pism

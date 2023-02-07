@@ -15,9 +15,10 @@ From: ubuntu:20.04
 
     echo "Installing Open MPI"
     export OMPI_DIR=/opt/ompi
-    export OMPI_VERSION=1.10.7
+    export OMPI_VERSION=4.0.5
     export HWLOC_VERS=1.11.8
-    export OMPI_URL="https://download.open-mpi.org/release/open-mpi/v1.10/openmpi-${OMPI_VERSION}.tar.bz2"
+#    export OMPI_URL="https://download.open-mpi.org/release/open-mpi/v1.10/openmpi-${OMPI_VERSION}.tar.bz2"
+    export OMPI_URL=https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-${OMPI_VERSION}.tar.bz2
     mkdir -p /tmp/ompi
     mkdir -p /opt
 
